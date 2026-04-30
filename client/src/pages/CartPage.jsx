@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import Navbar from '../components/Navbar';
 import DeliveryForm from '../components/DeliveryForm';
 import api from '../api';
@@ -9,6 +10,7 @@ import api from '../api';
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
   const { user } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,6 +33,7 @@ const CartPage = () => {
       };
       const response = await api.post('/order', orderData);
       clearCart();
+      showToast('Order placed successfully! Tracking started.', 'success');
       navigate(`/orders/${response.data.data.id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to place order');

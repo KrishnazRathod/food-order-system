@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { ToastProvider } from './context/ToastContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -23,8 +24,9 @@ const ProtectedRoute = ({ children }) => {
 const App = () => {
   return (
     <AuthProvider>
-      <CartProvider>
-        <Router>
+      <ToastProvider>
+        <CartProvider>
+          <Router>
           <div className="app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -46,7 +48,8 @@ const App = () => {
           </div>
         </Router>
       </CartProvider>
-    </AuthProvider>
+    </ToastProvider>
+  </AuthProvider>
   );
 };
 

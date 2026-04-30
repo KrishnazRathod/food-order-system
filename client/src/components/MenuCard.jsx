@@ -1,8 +1,14 @@
-import React from 'react';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 
 const MenuCard = ({ item }) => {
   const { addToCart } = useCart();
+  const { showToast } = useToast();
+
+  const handleAddToCart = () => {
+    addToCart(item);
+    showToast(`${item.name} added to cart!`);
+  };
 
   return (
     <div className="premium-card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -39,7 +45,7 @@ const MenuCard = ({ item }) => {
         </p>
         
         <button 
-          onClick={() => addToCart(item)}
+          onClick={handleAddToCart}
           className="btn-primary" 
           style={{ width: '100%' }}
         >
