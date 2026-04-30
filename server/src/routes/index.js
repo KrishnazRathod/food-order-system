@@ -12,6 +12,10 @@ const router = Router();
 const register = (app) => {
   app.use(router);
 
+  router.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'UP', timestamp: new Date() });
+  });
+
   router.use('/api/account', [account]);
   router.use('/api/menu', [menu]);
   router.use('/api/order', [order]);
