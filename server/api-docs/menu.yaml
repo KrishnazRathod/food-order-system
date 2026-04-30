@@ -1,0 +1,138 @@
+paths:
+  /menu:
+    get:
+      tags:
+        - Menu
+      summary: List all menu items
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: search
+          type: string
+          description: Search by name or description
+        - in: query
+          name: category
+          type: string
+          enum: [pizza, burger, drink, dessert, side]
+          description: Filter by category
+        - in: query
+          name: limit
+          type: integer
+          description: Number of items to return
+        - in: query
+          name: offset
+          type: integer
+          description: Number of items to skip
+      responses:
+        '200':
+          description: Menu items list
+    post:
+      tags:
+        - Menu
+      summary: Create a new menu item (Admin only)
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: MenuItem
+          required: true
+          schema:
+            "$ref": "#/definitions/createMenuItem"
+      responses:
+        '201':
+          description: Menu item created
+        '400':
+          description: Validation error
+  /menu/{id}:
+    get:
+      tags:
+        - Menu
+      summary: Get a single menu item
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Menu item detail
+        '404':
+          description: Menu item not found
+    put:
+      tags:
+        - Menu
+      summary: Update a menu item (Admin only)
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+        - in: body
+          name: MenuItem
+          required: true
+          schema:
+            "$ref": "#/definitions/updateMenuItem"
+      responses:
+        '200':
+          description: Menu item updated
+    delete:
+      tags:
+        - Menu
+      summary: Delete a menu item (Admin only)
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Menu item deleted
+definitions:
+  createMenuItem:
+    type: object
+    properties:
+      name:
+        type: string
+        required: true
+      description:
+        type: string
+      price:
+        type: number
+        required: true
+      image:
+        type: string
+      category:
+        type: string
+        enum: [pizza, burger, drink, dessert, side]
+        required: true
+      isAvailable:
+        type: boolean
+  updateMenuItem:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      price:
+        type: number
+      image:
+        type: string
+      category:
+        type: string
+        enum: [pizza, burger, drink, dessert, side]
+      isAvailable:
+        type: boolean

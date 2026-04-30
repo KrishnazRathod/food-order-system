@@ -1,0 +1,79 @@
+paths:
+  /account/register:
+    post:
+      tags:
+        - Account
+      summary: Register a new user
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Register
+          required: true
+          schema:
+            "$ref": "#/definitions/registerUser"
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Validation error or email exists
+  /account/login:
+    post:
+      tags:
+        - Account
+      summary: User login
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Login
+          required: true
+          schema:
+            "$ref": "#/definitions/loginUser"
+      responses:
+        '200':
+          description: Login successful
+        '400':
+          description: Invalid credentials
+  /account/me:
+    get:
+      tags:
+        - Account
+      summary: Get current user profile
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User profile data
+definitions:
+  registerUser:
+    type: object
+    properties:
+      firstName:
+        type: string
+        required: true
+      lastName:
+        type: string
+        required: true
+      email:
+        type: string
+        format: email
+        required: true
+      password:
+        type: string
+        required: true
+      confirmPassword:
+        type: string
+        required: true
+  loginUser:
+    type: object
+    properties:
+      email:
+        type: string
+        format: email
+        required: true
+      password:
+        type: string
+        required: true

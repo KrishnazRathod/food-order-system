@@ -1,0 +1,133 @@
+paths:
+  /order:
+    post:
+      tags:
+        - Order
+      summary: Place a new order
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Order
+          required: true
+          schema:
+            "$ref": "#/definitions/createOrder"
+      responses:
+        '201':
+          description: Order placed successfully
+        '400':
+          description: Validation error
+    get:
+      tags:
+        - Order
+      summary: List orders (user sees own, admin sees all)
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: status
+          type: string
+          enum: [received, preparing, out_for_delivery, delivered, cancelled]
+        - in: query
+          name: limit
+          type: integer
+        - in: query
+          name: offset
+          type: integer
+      responses:
+        '200':
+          description: Orders list
+  /order/{id}:
+    get:
+      tags:
+        - Order
+      summary: Get order detail
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Order detail
+        '404':
+          description: Order not found
+    delete:
+      tags:
+        - Order
+      summary: Cancel an order (Admin only)
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Order cancelled
+  /order/{id}/status:
+    patch:
+      tags:
+        - Order
+      summary: Update order status (Admin only)
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+        - in: body
+          name: Status
+          required: true
+          schema:
+            "$ref": "#/definitions/updateOrderStatus"
+      responses:
+        '200':
+          description: Order status updated
+definitions:
+  createOrder:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            menuItemId:
+              type: integer
+              required: true
+            quantity:
+              type: integer
+              required: true
+      deliveryName:
+        type: string
+        required: true
+      deliveryAddress:
+        type: string
+        required: true
+      deliveryPhone:
+        type: string
+        required: true
+      notes:
+        type: string
+  updateOrderStatus:
+    type: object
+    properties:
+      status:
+        type: string
+        enum: [received, preparing, out_for_delivery, delivered, cancelled]
+        required: true
