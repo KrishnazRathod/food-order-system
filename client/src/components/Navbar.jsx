@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import CartDrawer from './CartDrawer';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -40,7 +42,10 @@ const Navbar = () => {
             </>
           )}
           
-          <Link to="/cart" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <div 
+            onClick={() => setIsCartOpen(true)}
+            style={{ position: 'relative', display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
@@ -52,7 +57,7 @@ const Navbar = () => {
                 top: '-8px', 
                 right: '-10px', 
                 background: 'var(--primary)', 
-                color: '#fff', 
+                color: '#000', 
                 borderRadius: '50%', 
                 width: '18px', 
                 height: '18px', 
@@ -65,9 +70,11 @@ const Navbar = () => {
                 {cartCount}
               </span>
             )}
-          </Link>
+          </div>
         </div>
       </div>
+      
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </nav>
   );
 };
